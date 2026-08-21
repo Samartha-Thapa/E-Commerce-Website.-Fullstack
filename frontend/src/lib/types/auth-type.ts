@@ -9,3 +9,8 @@ export type LoginFormData = {
     email: string;
     password: string;
 }
+
+export type codeVerificationData = {
+    email: string;
+    code: string;
+}

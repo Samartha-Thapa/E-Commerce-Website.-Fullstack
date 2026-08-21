@@ -1,4 +1,4 @@
-import { LoginFormData, RegisterFormData } from "@/lib/types/auth-type";
+import { codeVerificationData, LoginFormData, RegisterFormData } from "@/lib/types/auth-type";
 import api from "../api";
 import axios from "axios";
 
@@ -24,6 +24,17 @@ const loginUser = async (data: LoginFormData) => {
     } catch(err) {
         console.error(err);
     }
+}
+
+export async function codeVerification(data: codeVerificationData) {
+    await axios.get(`${process.env.NEXT_PUBLIC_URL}/sanctum/csrf-cookie`, {
+        withCredentials: true,
+    });
+
+    const response = await api.post("/verifyCode", data);
+
+    return response.data;
+
 }
 
 export {registerUser, loginUser };

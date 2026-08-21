@@ -72,7 +72,7 @@ export function RegisterForm({
         setLoading(false);
         return;
       }
-      router.push(`/dasboard`)
+      router.push(`/verify-form?email=${encodeURIComponent(formData.email)}`);
     } catch(err) {
       console.error(err);
       setError("An unexpected error occurred");
