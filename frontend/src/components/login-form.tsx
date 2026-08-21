@@ -17,16 +17,50 @@ import {
   FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import React, { useState } from "react"
+import { FiEye, FiEyeOff } from "react-icons/fi"
+import { loginUser } from "@/lib/api/(auth)/auth"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   })
+  const [showPassword, setShowPasswrod] = useState(false)
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target;
+    setFormData((prev) => ({...prev, [name]: value}));
+  }
+
+  const handleSubmit = async (e:React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const data = await loginUser(formData);
+      if(!data) {
+        setError("Something unexpected error occured!");
+        setLoading(false);
+        return;
+      }
+      router.push("/")
+    } catch(err) {
+      console.error(err);
+      setError("An unexpected error occurred")
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -37,7 +71,7 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <Button variant="outline" type="button">
@@ -57,7 +91,10 @@ export function LoginForm({
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="m@example.com"
                   required
                 />
@@ -72,7 +109,18 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <div className="relative w-full">
+
+                <Input id="password" name="password" value={formData.password} onChange={handleChange} type={showPassword ? 'text' : 'password'} required />
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswrod(!showPassword)}                      
+                      className='absolute right-3 top-2 text-purple-300 hover:text-purple-100 transition-colors'
+                      aria-label={showPassword? "Hide Password" : "Show Password"}
+                      >
+                      {showPassword? <FiEyeOff className='h-4 w-4' /> : <FiEye className='h-4 w-4' />}
+                    </button>
+                </div>
               </Field>
               <Field>
                 <Button type="submit">Login</Button>

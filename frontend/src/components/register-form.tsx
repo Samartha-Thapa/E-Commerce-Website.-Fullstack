@@ -137,29 +137,33 @@ export function RegisterForm({
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                 </div>
-                <Input id={showPwd.showPassword ? 'text' : 'password'} name="password" type="password" value={formData.password} onChange={handleChange} disabled={loading} required />
-                <button
-                  type="button"
-                  onClick={togglePassword}                      
-                  className='absolute right-3 top-2 text-purple-300 hover:text-purple-100 transition-colors'
-                  aria-label={showPwd.showPassword ? "Hide Password" : "Show Password"}
-                >
-                  {showPwd.showPassword ? <FiEyeOff  className='h-4 w-4' /> : <FiEye className='h-4 w-4' />}
-                </button>
+                <div className="relative w-full">
+                  <Input id="passowrd" name="password" type={showPwd.showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} disabled={loading} required />
+                  <button
+                    type="button"
+                    onClick={togglePassword}                      
+                    className='absolute right-3 top-2 text-purple-300 hover:text-purple-100 transition-colors'
+                    aria-label={showPwd.showPassword ? "Hide Password" : "Show Password"}
+                    >
+                    {showPwd.showPassword ? <FiEyeOff  className='h-4 w-4' /> : <FiEye className='h-4 w-4' />}
+                  </button>
+                  </div>
               </Field>
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password_confirmation">Confirm Password</FieldLabel>
                 </div>
-                <Input id="password_confirmation" name="password_confirmation" type={showPwd.showConfirmPassword ? 'text' : 'password'} value={formData.password_confirmation} onChange={handleChange} disabled={loading} required />
-                <button
-                  type="button"
-                  onClick={toggleConfirmPassword}                      
-                  className='absolute right-3 top-2 text-purple-300 hover:text-purple-100 transition-colors'
-                  aria-label={showPwd.showConfirmPassword ? "Hide Password" : "Show Password"}
-                >
-                  {showPwd.showConfirmPassword ? <FiEyeOff className='h-4 w-4' /> : <FiEye className='h-4 w-4' />}
-                </button>
+                <div className="relative w-full">
+                  <Input id="password_confirmation" name="password_confirmation" type={showPwd.showConfirmPassword ? 'text' : 'password'} value={formData.password_confirmation} onChange={handleChange} disabled={loading} required />
+                  <button
+                    type="button"
+                    onClick={toggleConfirmPassword}                      
+                    className='absolute right-3 top-2 text-purple-300 hover:text-purple-100 transition-colors'
+                    aria-label={showPwd.showConfirmPassword ? "Hide Password" : "Show Password"}
+                    >
+                    {showPwd.showConfirmPassword ? <FiEyeOff className='h-4 w-4' /> : <FiEye className='h-4 w-4' />}
+                  </button>
+                </div>
               </Field>
               <Field>
                 <Button type="submit">Register</Button>
