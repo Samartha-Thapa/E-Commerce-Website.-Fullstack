@@ -13,8 +13,15 @@ use Illuminate\Support\Facades\Hash;
 class RegisterController extends Controller
 {
     public function register(RegisterRequest $request) {
-        $code = random_int(100000, 999999);
 
+        if (Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are already logged in.'
+            ], 409);
+        }
+
+        $code = random_int(100000, 999999);
 
         $user = User::create([
             'name' => $request->name,
