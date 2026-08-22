@@ -166,7 +166,7 @@ export function RegisterForm({
                 </div>
               </Field>
               <Field>
-                <Button type="submit">Register</Button>
+                <Button type="submit" disabled={loading}>{loading ? "Registering..." : "Register"}</Button>
                 <FieldDescription className="text-center">
                   Already have an account? <a href="#">Log In</a>
                 </FieldDescription>

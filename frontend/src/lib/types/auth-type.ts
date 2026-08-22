@@ -10,7 +10,12 @@ export type LoginFormData = {
     password: string;
 }
 
-export type codeVerificationData = {
+export type CodeVerificationData = {
     email: string;
     code: string;
+}
+
+export type PasswordResetData = {
+    email: string;
+    password: string;
 }

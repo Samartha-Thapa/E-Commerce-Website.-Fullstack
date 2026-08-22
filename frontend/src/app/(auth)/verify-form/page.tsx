@@ -1,9 +1,16 @@
 "use client"
+import { cn } from "@/lib/utils"
 import React, { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation';
 import { codeVerification } from '@/lib/api/(auth)/auth';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Field, FieldGroup } from "@/components/ui/field";
 
-const VerifyForm = () => {
+const VerifyForm = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => {
     const [code, setCode] = useState("");
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -39,16 +46,21 @@ const VerifyForm = () => {
         }
     }
   return (
-    <div className="flex justify-center items-center min-h-screen">
-            <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
-                    <h1 className="text-2xl font-bold text-center text-gray-800">
+    <div className={cn("flex justify-center items-center min-h-screen", className)}>
+            <Card className="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center text-gray-800">
                         Verify Your Email
-                    </h1>
-                    <p className="text-center text-gray-600 mt-2">
+                    </CardTitle>
+                    <CardDescription className="text-center text-gray-600 mt-2">
                         We sent a code to <span className="font-semibold">{email}</span>
-                    </p>
+                    </CardDescription>
+                </CardHeader>
 
-                    <div className="mt-6">
+                <CardContent>
+                    <FieldGroup className="space-y-4">
+
+                    <Field className="mt-6">
                         <input
                             type="text"
                             placeholder="Enter verification code"
@@ -56,8 +68,8 @@ const VerifyForm = () => {
                             onChange={(e) => setCode(e.target.value)}
                             className="w-full border rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                             maxLength={6}
-                        />
-                    </div>
+                            />
+                    </Field>
 
                     {error && (
                         <p className="mt-3 text-sm text-red-500 text-center">{error}</p>
@@ -66,14 +78,18 @@ const VerifyForm = () => {
                         <p className="mt-3 text-sm text-green-600 text-center">{message}</p>
                     )}
 
-                    <button
-                        onClick={handleVerify}
-                        disabled={loading || code.length !== 6}
-                        className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-60"
-                    >
-                        {loading ? "Verifying..." : "Verify"}
-                    </button>
-        </div>
+                    <Field>
+                        <Button
+                            onClick={handleVerify}
+                            disabled={loading || code.length !== 6}
+                            className="mt-6 w-full py-2 rounded-lg font-semibold transition disabled:opacity-60"
+                            >
+                            {loading ? "Verifying..." : "Verify"}
+                        </Button>
+                    </Field>
+                    </FieldGroup>
+                </CardContent>
+        </Card>
         </div>
   )
 }
