@@ -8,9 +8,14 @@ const registerUser = async (data: RegisterFormData) => {
     });
     try{
         const response = await api.post("/register", data);
-        return response.data;
-    } catch(err) {
+        return {success: true, ...response.data};
+    } catch(err: any) {
         console.error(err);
+        return {
+            success: false,
+            message: err.response?.data?.message || "An unexpected error occurred!",
+            errors: err.response?.data?.errors || null,
+        }
     }
 }
 
@@ -20,9 +25,14 @@ const loginUser = async (data: LoginFormData) => {
     });
     try {
         const response = await api.post("/login", data);
-        return response.data;
-    } catch(err) {
+        return {success: true, ...response.data};
+    } catch(err: any) {
         console.error(err);
+        return {
+            success: false,
+            message: err.response?.data?.message || "An unexpected error occurred!",
+            errors: err.response?.data?.errors || null,
+        }
     }
 }
 async function codeVerification(data: CodeVerificationData) {
@@ -30,9 +40,18 @@ async function codeVerification(data: CodeVerificationData) {
         withCredentials: true,
     });
 
-    const response = await api.post("/verifyCode", data);
+    try {
 
-    return response.data;
+        const response = await api.post("/verifyCode", data);   
+        return {success: true, ...response.data};
+    } catch (err: any) {
+        console.error(err);
+        return {
+            success: false,
+            message: err.response?.data?.message || "An unexpected error occurred!",
+            errors: err.response?.data?.errors || null,
+        }
+    }
 
 }
 
@@ -41,11 +60,20 @@ const forgotPasswordUser = async (data: string) => {
         withCredentials: true,
     });
 
-    const response = await api.post("/forgot-password", {
-        email: data
-    });
-
-    return response.data;
+    try {
+        const response = await api.post("/forgot-password", {
+            email: data
+        });
+        
+        return {success: true, ...response.data};
+    } catch(err:any) {
+        console.error(err);
+        return {
+            success: false,
+            message: err.response?.data?.message || "An unexpected error occurred!",
+            errors: err.response?.data?.errors || null,
+        }
+    }
 
 }
 
@@ -54,8 +82,17 @@ const resetPasswordUser = async (data: PasswordResetData) => {
         withCredentials: true,
     });
 
-    const response = await api.post("/password-reset", data);
-    return response.data;
+    try {
+        const response = await api.post("/password-reset", data);
+        return {success: true, ...response.data};
+    } catch(err: any) {
+        console.error(err);
+        return {
+            success: false,
+            message: err.response?.data?.message || "An unexpected error occurred!",
+            erros: err.response?.data?.errors || null,
+        }
+    }
 }
 
 

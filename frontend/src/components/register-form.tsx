@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import React, { ChangeEvent, useState } from "react"
 import { registerUser } from "@/lib/api/(auth)/auth"
-import { RegisterFormData } from "@/lib/types/auth-type"
+import { toast } from "./ui/toast"
 import { useRouter } from "next/navigation"
 
 export function RegisterForm({
@@ -35,7 +35,6 @@ export function RegisterForm({
     password_confirmation: "",
   })
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showPwd, setShowPwd] = useState({
     showPassword: false,
     showConfirmPassword: false,
@@ -57,25 +56,36 @@ export function RegisterForm({
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
 
     setLoading(true);
 
     if(formData.password !== formData.password_confirmation) {
-      setError("Passwords donot match");
+      toast.add({
+        title: "Passwords Mismatch!",
+        description: "The passwords don not match!"
+      })
+      setLoading(false);
+      return;
     }
 
     try {
       const data = await registerUser(formData);
-      if(!data) {
-        setError("Something unexpected error occured!");
+      if(!data || data.success === false) {
+        toast.add({
+          title: "Registration Failed",
+          description: data?.message || "An unexpected error occurred",
+        })
         setLoading(false);
         return;
       }
       router.push(`/verify-form?email=${encodeURIComponent(formData.email)}`);
-    } catch(err) {
+    } catch(err: any) {
+      const errorMessage = err.response?.data?.message || "An unexpected error occurred"
+      toast.add({
+        title: "Registration Failed",
+        description: errorMessage
+      })
       console.error(err);
-      setError("An unexpected error occurred");
     }finally{
       setLoading(false);
     }

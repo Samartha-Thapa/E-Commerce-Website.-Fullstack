@@ -21,6 +21,7 @@ import React, { useState } from "react"
 import { FiEye, FiEyeOff } from "react-icons/fi"
 import { loginUser } from "@/lib/api/(auth)/auth"
 import { useRouter } from "next/navigation"
+import { toast } from "./ui/toast"
 
 export function LoginForm({
   className,
@@ -32,7 +33,6 @@ export function LoginForm({
     password: "",
   })
   const [showPassword, setShowPasswrod] = useState(false)
-  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -42,20 +42,26 @@ export function LoginForm({
 
   const handleSubmit = async (e:React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
     setLoading(true);
 
     try {
       const data = await loginUser(formData);
-      if(!data) {
-        setError("Something unexpected error occured!");
+      if(!data || data.success === false) {
+        toast.add({
+          title: "Log In Failed",
+          description: data?.message || "An unexpected error occurred",
+        })
         setLoading(false);
         return;
       }
       router.push("/")
-    } catch(err) {
+    } catch(err: any) {
+      const errorMessage = err.response?.data?.message || "An unexpected error occurred"
+      toast.add({
+        title: "Log In Failed",
+        description: errorMessage
+      })
       console.error(err);
-      setError("An unexpected error occurred")
     } finally {
       setLoading(false);
     }

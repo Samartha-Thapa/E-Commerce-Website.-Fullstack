@@ -20,6 +20,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { forgotPasswordUser } from "@/lib/api/(auth)/auth"
+import { toast } from "./ui/toast"
 
 export function ForgotPasswordForm({
   className,
@@ -27,7 +28,6 @@ export function ForgotPasswordForm({
 }: React.ComponentProps<"div">) {
     const [email, setEmail] = useState<string>("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -37,14 +37,21 @@ export function ForgotPasswordForm({
         try{
           const data = await forgotPasswordUser(email);
           
-          if(!data) {
-            setError("An unexpected error occurred!");
+          if(!data || data.success === false) {
+            toast.add({
+              title: "Failed to send password link",
+              description: data?.message || "An unexpected error occurred!"
+            })
             setLoading(false);
             return;
           }
-        } catch(err) {
+        } catch(err: any) {
+          const errorMessage = err.response?.data?.message || "An unexpected error occurred"
           console.error(err);
-          setError("An unexpected error occurred!");
+          toast.add({
+            title: "Verify Failed",
+            description: errorMessage
+          })
         } finally{
           setLoading(false);
         }

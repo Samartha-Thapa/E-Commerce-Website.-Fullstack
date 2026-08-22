@@ -6,6 +6,7 @@ import { codeVerification } from '@/lib/api/(auth)/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldGroup } from "@/components/ui/field";
+import { toast } from "@/components/ui/toast";
 
 const VerifyForm = ({
   className,
@@ -17,20 +18,20 @@ const VerifyForm = ({
     const email = searchParams.get("email");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
 
     const handleVerify = async () => {
         setLoading(true);
-        setError("");
 
         console.log(email);
 
         try{
             const data = await codeVerification({email,code});
-            // localStorage.setItem('token', data.token);
 
-            if(!data) {
-                setError(data.message || "Verification failed");
+            if(!data || data.success === false) {
+                toast.add({
+                    title: "Verify Failed",
+                    description: data?.message || "An unexpected error occurred",
+                })
                 setLoading(false);
                 return;
             }
@@ -38,9 +39,13 @@ const VerifyForm = ({
                 router.push('/');
             }, 2000);
         }
-        catch(err){
+        catch(err: any){
+            const errorMessage = err.response?.data?.message || "An unexpected error occurred"
+            toast.add({
+                title: "Verify Failed",
+                description: errorMessage
+            })
             console.error(err);
-            setError("Something went wrong. Please try again");
         } finally {
             setLoading(false)
         }
@@ -70,13 +75,6 @@ const VerifyForm = ({
                             maxLength={6}
                             />
                     </Field>
-
-                    {error && (
-                        <p className="mt-3 text-sm text-red-500 text-center">{error}</p>
-                    )}
-                    {message && (
-                        <p className="mt-3 text-sm text-green-600 text-center">{message}</p>
-                    )}
 
                     <Field>
                         <Button

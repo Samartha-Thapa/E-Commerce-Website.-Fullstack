@@ -21,6 +21,7 @@ import { ChangeEvent, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { FiEye, FiEyeOff } from "react-icons/fi"
 import { resetPasswordUser } from "@/lib/api/(auth)/auth"
+import { toast } from "./ui/toast"
 
 export function ResetPasswordForm({
   className,
@@ -71,14 +72,23 @@ export function ResetPasswordForm({
             email: email || ""
           }
           const data = await resetPasswordUser(payload);
-          if(!data) {
+          if(!data || data.success === false) {
+            toast.add({
+              title: "Failed to reset password",
+              description: data?.message || "An unexpected error occurred",
+            })
             setError("Something unexpected error occurred!");
             setLoading(false);
             return;
           }
           router.push('/');
-        } catch (err) {
+        } catch (err: any) {
+          const errorMessage = err.response?.data?.message || "An unexpected error occurred"
           console.error(err);
+          toast.add({
+            title: "Failed to reset password",
+            description: errorMessage
+          })
           setError('An unexpected Error occurred!');
         } finally {
           setLoading(false);
