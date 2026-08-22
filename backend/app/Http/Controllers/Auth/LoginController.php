@@ -21,7 +21,6 @@ class LoginController extends Controller
             ], 401);
         }
 
-
         Auth::login($user);
         $request->session()->regenerate();
 
