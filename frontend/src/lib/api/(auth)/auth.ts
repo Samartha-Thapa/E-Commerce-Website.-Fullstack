@@ -1,4 +1,4 @@
-import { codeVerificationData, LoginFormData, RegisterFormData } from "@/lib/types/auth-type";
+import { CodeVerificationData, LoginFormData, PasswordResetData, RegisterFormData } from "@/lib/types/auth-type";
 import api from "../api";
 import axios from "axios";
 
@@ -25,8 +25,7 @@ const loginUser = async (data: LoginFormData) => {
         console.error(err);
     }
 }
-
-export async function codeVerification(data: codeVerificationData) {
+async function codeVerification(data: CodeVerificationData) {
     await axios.get(`${process.env.NEXT_PUBLIC_URL}/sanctum/csrf-cookie`, {
         withCredentials: true,
     });
@@ -37,4 +36,27 @@ export async function codeVerification(data: codeVerificationData) {
 
 }
 
-export {registerUser, loginUser };
+const forgotPasswordUser = async (data: string) => {
+    await axios.get(`${process.env.NEXT_PUBLIC_URL}/sanctum/csrf-cookie`, {
+        withCredentials: true,
+    });
+
+    const response = await api.post("/forgot-password", {
+        email: data
+    });
+
+    return response.data;
+
+}
+
+const resetPasswordUser = async (data: PasswordResetData) => {
+    await axios.get(`${process.env.NEXT_PUBLIC_URL}/sanctum/csrf-cookie`, {
+        withCredentials: true,
+    });
+
+    const response = await api.post("/password-reset", data);
+    return response.data;
+}
+
+
+export {registerUser, loginUser, codeVerification, forgotPasswordUser, resetPasswordUser };
