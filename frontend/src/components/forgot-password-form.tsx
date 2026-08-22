@@ -45,6 +45,10 @@ export function ForgotPasswordForm({
             setLoading(false);
             return;
           }
+          toast.add({
+            title: "Email Sent successfully",
+            description: "Check your email to reset your password"
+          })
         } catch(err: any) {
           const errorMessage = err.response?.data?.message || "An unexpected error occurred"
           console.error(err);
