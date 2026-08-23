@@ -13,7 +13,6 @@ import {
   FieldDescription,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
@@ -35,7 +34,6 @@ export function ResetPasswordForm({
       password_confirmation: "",
     })
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [showPwd, setShowPwd] = useState({
       showPassword: false,
       showConfirmPassword: false,
@@ -58,15 +56,12 @@ export function ResetPasswordForm({
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-
         if(formData.password !== formData.password_confirmation) {
-          setError("Passwords do not match!");
           return;
         }
+        setLoading(true);
 
         try {
-
           const payload = {
             ...formData, 
             email: email || ""
@@ -77,10 +72,13 @@ export function ResetPasswordForm({
               title: "Failed to reset password",
               description: data?.message || "An unexpected error occurred",
             })
-            setError("Something unexpected error occurred!");
             setLoading(false);
             return;
           }
+          toast.add({
+            title: "Password Reset successfully",
+            description: "Log In with new password"
+          })
           router.push('/');
         } catch (err: any) {
           const errorMessage = err.response?.data?.message || "An unexpected error occurred"
@@ -89,7 +87,6 @@ export function ResetPasswordForm({
             title: "Failed to reset password",
             description: errorMessage
           })
-          setError('An unexpected Error occurred!');
         } finally {
           setLoading(false);
         }

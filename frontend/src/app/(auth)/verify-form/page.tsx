@@ -25,7 +25,7 @@ const VerifyForm = ({
         console.log(email);
 
         try{
-            const data = await codeVerification({email,code});
+            const data = await codeVerification({email, code});
 
             if(!data || data.success === false) {
                 toast.add({
@@ -36,6 +36,10 @@ const VerifyForm = ({
                 return;
             }
             setTimeout(() => {
+                toast.add({
+                    title: 'Verified Successfully',
+                    description: 'Welcome! You are now being redirected to the homepage.'
+                })
                 router.push('/');
             }, 2000);
         }
