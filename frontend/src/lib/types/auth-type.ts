@@ -11,7 +11,7 @@ export type LoginFormData = {
 }
 
 export type CodeVerificationData = {
-    email: string;
+    email: string | null;
     code: string;
 }
 
