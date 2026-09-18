@@ -16,7 +16,6 @@ const VerifyForm = ({
     const router = useRouter();
     const searchParams = useSearchParams();
     const email = searchParams.get("email");
-    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleVerify = async () => {
