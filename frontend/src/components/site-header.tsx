@@ -14,7 +14,6 @@ export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState('All Categories')
 
-
   return (
 
     <>
