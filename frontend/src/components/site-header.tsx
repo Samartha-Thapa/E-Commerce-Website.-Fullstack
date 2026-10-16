@@ -13,7 +13,7 @@ export function SiteHeader() {
   const [cartCount, setCartCount] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState('All Categories')
-
+  
   return (
 
     <>
